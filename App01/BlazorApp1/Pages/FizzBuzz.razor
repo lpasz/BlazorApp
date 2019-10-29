@@ -1,21 +1,86 @@
 ﻿@page "/fizzbuzz"
 
-<h1>Counter</h1>
+<h1>Fizz Buzz</h1>
 
-@*<p>Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>*@
 <ul>
     @foreach (string porco in OsTresPorquinhos())
     {
-    <li> @porco </li>
+        <li> @porco </li>
     }
 </ul>
 
+<input placeholder="Fizz" @bind="@Fizz" />
+<input placeholder="Buzz" @bind="@Buzz" />
+<button class="btn btn-primary">Click me</button>
+
+
+
 @code {
+    public void TableGenerator()
+    {
+        <table>
+            @foreach (int[] row in rowsDivided())
+            {
+                <tr>
+                    @foreach (int num in row)
+                    {
+                        var value = (string)null;
+                        if (Fizz != 0 && Buzz != 0)
+                        {
+
+                            if (num % Fizz == 0)
+                            {
+                                value = "Fizz";
+                            }
+                            if (num % Buzz == 0)
+                            {
+                                value += "Buzz";
+
+                            }
+                        }
+                        value = (value == null) ? num.ToString() : value;
+
+                        <td>
+                            @value
+                        </td>
+                    }
+                </tr>
+            }
+        </table>;
+    }
+
+    public int Fizz;
+    public int Buzz;
+
+    public int[] oneHundred = Enumerable.Range(1, 100).ToArray();
+
+    public List<int[]> rowsDivided()
+    {
+        var rowItemIndex = 0;
+        var maxItensPerRow = 9;
+        List<int[]> rowDivided = new List<int[]>();
+        List<int> rowItems = new List<int>();
+        foreach (int num in oneHundred)
+        {
+            if (rowItemIndex > maxItensPerRow)
+            {
+                rowItemIndex = 0;
+                rowDivided.Add(rowItems.ToArray());
+                rowItems.Clear();
+
+            }
+            rowItems.Add(num);
+            rowItemIndex++;
+        }
+        return rowDivided;
+    }
+
+
+
 
     public string[] OsTresPorquinhos()
     {
         return new string[] { "Porco 01", "Porco 02", "Robson" };
     }
 }
+
