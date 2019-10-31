@@ -1,52 +1,63 @@
 ﻿@page "/fizzbuzz"
 
+
 <h1>Fizz Buzz</h1>
 
 <ul>
-    @foreach (string porco in OsTresPorquinhos())
-    {
-        <li> @porco </li>
-    }
-</ul>
+        @foreach (string porco in OsTresPorquinhos())
+        {
+            <li> @porco </li>
+        }
+    </ul>
 
 <input placeholder="Fizz" @bind="@Fizz" />
+
 <input placeholder="Buzz" @bind="@Buzz" />
-<button class="btn btn-primary">Click me</button>
+
+@TableGenerator()
+
+
 
 
 
 @code {
-    public void TableGenerator()
+    private RenderFragment TableGenerator()
     {
-        <table>
-            @foreach (int[] row in rowsDivided())
+        RenderFragment table;
+        table = t =>
+        {
+            t.OpenElement(1, "table");
+
+            foreach (int[] row in rowsDivided())
             {
-                <tr>
-                    @foreach (int num in row)
+                t.OpenElement(2, "tr");
+                foreach (int num in row)
+                {
+                    var value = (string)null;
+                    if (Fizz != 0 && Buzz != 0)
                     {
-                        var value = (string)null;
-                        if (Fizz != 0 && Buzz != 0)
+
+                        if (num % Fizz == 0)
                         {
-
-                            if (num % Fizz == 0)
-                            {
-                                value = "Fizz";
-                            }
-                            if (num % Buzz == 0)
-                            {
-                                value += "Buzz";
-
-                            }
+                            value = "Fizz";
                         }
-                        value = (value == null) ? num.ToString() : value;
+                        if (num % Buzz == 0)
+                        {
+                            value += "Buzz";
 
-                        <td>
-                            @value
-                        </td>
+                        }
                     }
-                </tr>
+                    value = (value == null) ? num.ToString() : value;
+
+                    t.OpenElement(3, "td");
+                    t.AddContent(4, value);
+                    t.CloseElement();
+                }
+                t.CloseElement();
             }
-        </table>;
+            t.CloseElement();
+        };
+        return table;
     }
 
     public int Fizz;
@@ -58,8 +69,12 @@
     {
         var rowItemIndex = 0;
         var maxItensPerRow = 9;
-        List<int[]> rowDivided = new List<int[]>();
-        List<int> rowItems = new List<int>();
+        List<int[]>
+            rowDivided = new List<int[]>
+                ();
+        List<int>
+            rowItems = new List<int>
+                ();
         foreach (int num in oneHundred)
         {
             if (rowItemIndex > maxItensPerRow)
@@ -74,9 +89,6 @@
         }
         return rowDivided;
     }
-
-
-
 
     public string[] OsTresPorquinhos()
     {
